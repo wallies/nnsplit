@@ -244,9 +244,9 @@ jobs:
       - name: Generate subject
         id: hash
         run: |
-          cd dist
-          HASHES=$(sha256sum bindings/python/target/wheels/* | base64 -w0)
+          HASHES=$(sha256sum target/wheels/* | base64 -w0)
           echo "hashes=$HASHES" >> "$GITHUB_OUTPUT"
+        working-directory: ${{env.working-directory}}
 
       - name: Upload wheel as artifact
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
