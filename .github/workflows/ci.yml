@@ -252,8 +252,8 @@ jobs:
           working-directory: ${{env.working-directory}}
   
       - name: Move temp cargo file and test
+        if: matrix.os == 'ubuntu-latest'  || matrix.os == 'macos-latest'
         run: |
-          rm Cargo.toml
           mv Cargo.temp Cargo.toml
           version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
           python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
@@ -277,7 +277,6 @@ jobs:
         with:
           name: python-wheel
           path: bindings/python/target/wheels/*
-
 
   python-release:
     runs-on: ubuntu-latest
