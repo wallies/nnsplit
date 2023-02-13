@@ -25,7 +25,7 @@ default-features = false
 features = ["model-loader"]
 
 [dependencies.pyo3]
-version = "0.14"
+version = "0.16.3"
 features = ["extension-module"]
 
 [workspace]
