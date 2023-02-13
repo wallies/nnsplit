@@ -231,9 +231,29 @@ jobs:
           make install
         working-directory: ${{env.working-directory}}
 
-      - name: Build
+      - name: Move cargo build to cargo toml
         run: |
-          make build
+          mv Cargo.toml Cargo.temp
+          cp Cargo.build.toml Cargo.toml
+        working-directory: ${{env.working-directory}}
+
+      - name: Move cargo build to cargo toml
+        run: |
+          mv Cargo.toml Cargo.temp
+          cp Cargo.build.toml Cargo.toml
+        working-directory: ${{env.working-directory}}
+
+      - uses: messense/maturin-action@7c8579861aba9e28def3eb58e9a54d2c9231c30f
+        with:
+          manylinux: auto
+          command: build
+          args: --release --interpreter python
+  
+      - name: Move temp cargo file and test
+        run: |
+          mv Cargo.temp Cargo.toml
+          version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
+          python -m pip install --ignore-installed --upgrade target/wheels/*cp$$version*.whl
         working-directory: ${{env.working-directory}}
 
       - name: Test
