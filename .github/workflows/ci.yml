@@ -252,7 +252,7 @@ jobs:
         run: |
           mv Cargo.temp Cargo.toml
           version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
-          python -m pip install --ignore-installed --upgrade --find-links= target/wheels nnsplit
+          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
         working-directory: ${{env.working-directory}}
 
       - name: Test
