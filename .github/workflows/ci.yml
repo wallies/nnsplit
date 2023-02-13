@@ -239,12 +239,6 @@ jobs:
           cp Cargo.build.toml Cargo.toml
         working-directory: ${{env.working-directory}}
 
-      - name: Move cargo build to cargo toml
-        run: |
-          mv Cargo.toml Cargo.temp
-          cp Cargo.build.toml Cargo.toml
-        working-directory: ${{env.working-directory}}
-
       - uses: messense/maturin-action@7c8579861aba9e28def3eb58e9a54d2c9231c30f
         with:
           manylinux: auto
