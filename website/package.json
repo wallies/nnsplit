@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "chart.js": "^2.9.4",
+    "chart.js": "^4.2.1",
     "core-js": "^3.27.2",
     "markdown-it-vue": "^1.1.4",
     "nnsplit": "file:../bindings/javascript/pkg",
