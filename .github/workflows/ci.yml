@@ -246,7 +246,7 @@ jobs:
         with:
           manylinux: auto
           command: build
-          args: --release --find-interpreter
+          args: --release --interpreter python3
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
   
