@@ -246,9 +246,8 @@ jobs:
         with:
           manylinux: auto
           command: build
-          args: --release --interpreter python
+          args: --release -i python${{ matrix.python-version }}
           maturin-version: 0.12.10
-          container: off
           working-directory: ${{env.working-directory}}
   
       - name: Move temp cargo file and test
