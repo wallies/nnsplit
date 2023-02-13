@@ -259,6 +259,14 @@ jobs:
           python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
         working-directory: ${{env.working-directory}}
 
+      - name: Move temp cargo file and test
+        if: matrix.os == 'windows-latest'
+        run: |
+          rm Cargo.toml
+          mv Cargo.temp Cargo.toml
+          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
+        working-directory: ${{env.working-directory}}
+
       - name: Test
         run: |
           make test
