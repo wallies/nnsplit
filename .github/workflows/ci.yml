@@ -250,6 +250,7 @@ jobs:
           manylinux: auto
           command: build
           args: --release --interpreter python
+          working-directory: ${{env.working-directory}}
   
       - name: Move temp cargo file and test
         run: |
