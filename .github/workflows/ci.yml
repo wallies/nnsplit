@@ -246,7 +246,7 @@ jobs:
         with:
           manylinux: auto
           command: build
-          args: --release --interpreter python
+          args: --release --find-interpreter
           working-directory: ${{env.working-directory}}
   
       - name: Move temp cargo file and test
