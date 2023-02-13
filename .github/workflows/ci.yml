@@ -242,6 +242,7 @@ jobs:
         working-directory: ${{env.working-directory}}
 
       - name: Generate subject
+        if: matrix.os == 'ubuntu-latest'
         id: hash
         run: |
           HASHES=$(sha256sum target/wheels/* | base64 -w0)
