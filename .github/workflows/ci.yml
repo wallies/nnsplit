@@ -246,7 +246,7 @@ jobs:
         with:
           manylinux: auto
           command: build
-          args: --release --interpreter ${{ matrix.python-version }}
+          args: --release --interpreter python${{ matrix.python-version }}
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
   
