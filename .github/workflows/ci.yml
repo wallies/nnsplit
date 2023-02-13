@@ -243,6 +243,7 @@ jobs:
         working-directory: ${{env.working-directory}}
 
       - uses: messense/maturin-action@7c8579861aba9e28def3eb58e9a54d2c9231c30f
+        if: matrix.os == 'ubuntu-latest'
         with:
           manylinux: auto
           command: build
@@ -250,6 +251,15 @@ jobs:
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
   
+      - uses: messense/maturin-action@7c8579861aba9e28def3eb58e9a54d2c9231c30f
+        if: matrix.os == 'windows-latest'  || matrix.os == 'macos-latest'
+        with:
+          manylinux: auto
+          command: build
+          args: --release -i python
+          maturin-version: 0.12.10
+          working-directory: ${{env.working-directory}}
+
       - name: Move temp cargo file and test
         if: matrix.os == 'ubuntu-latest'  || matrix.os == 'macos-latest'
         run: |
