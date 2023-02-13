@@ -247,6 +247,7 @@ jobs:
           manylinux: auto
           command: build
           args: --release --find-interpreter
+          maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
   
       - name: Move temp cargo file and test
