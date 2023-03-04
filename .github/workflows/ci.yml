@@ -183,6 +183,8 @@ jobs:
   python-macos:
     needs: security-audit
     runs-on: macos-latest
+    env:
+      working-directory: bindings/python
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
@@ -280,6 +282,8 @@ jobs:
   python-windows:
     needs: security-audit
     runs-on: windows-latest
+    env:
+      working-directory: bindings/python
     strategy:
       matrix:
         platform: [
@@ -364,6 +368,8 @@ jobs:
   python-linux:
     needs: security-audit
     runs-on: ubuntu-latest
+    env:
+      working-directory: bindings/python
     strategy:
       matrix:
         platform: [
