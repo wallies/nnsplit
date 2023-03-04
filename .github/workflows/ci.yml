@@ -430,7 +430,7 @@ jobs:
           manylinux: ${{ matrix.platform.manylinux }}
           command: build
           target: ${{ matrix.platform.target }}
-          args: --release -o dist -i python${{ matrix.python-version }}
+          args: --release --sdist -o dist -i python3.8
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
