@@ -247,7 +247,7 @@ jobs:
         uses: messense/maturin-action@59e476bfb6fd6e071aaa1cf62bc573e10cdac221
         with:
           target: x86_64-apple-darwin
-          args: --release --out dist --sdist -i 3.8 3.9 3.10 3.11
+          args: --release --out dist -i 3.8 3.9 3.10 3.11 -- --sdist
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
@@ -317,7 +317,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.platform.interpreter }}
           architecture: ${{ matrix.platform.target }}
 
       - uses: dtolnay/rust-toolchain@stable
@@ -344,7 +344,7 @@ jobs:
         with:
           command: build
           target: ${{ matrix.platform.target }}
-          args: --release --out dist -i ${{ matrix.platform.interpreter }}
+          args: --release --out dist -i python
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
@@ -428,7 +428,7 @@ jobs:
           manylinux: ${{ matrix.platform.manylinux }}
           command: build
           target: ${{ matrix.platform.target }}
-          args: --release --sdist -o dist -i python3.8
+          args: --release -o dist -i python3.9 -- --sdist
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
