@@ -258,6 +258,12 @@ jobs:
           python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
         working-directory: ${{env.working-directory}}
 
+      - name: Move cargo build to cargo toml
+        run: |
+          mv Cargo.toml Cargo.temp
+          cp Cargo.build.toml Cargo.toml
+        working-directory: ${{env.working-directory}}
+
       - name: Build wheels - universal2
         uses: messense/maturin-action@59e476bfb6fd6e071aaa1cf62bc573e10cdac221
         with:
