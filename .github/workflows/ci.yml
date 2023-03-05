@@ -431,10 +431,8 @@ jobs:
         with:
           rust-toolchain: stable
           manylinux: auto
-          command: build
-          target: x86_64-unknown-linux-musl
           args: --release -i 3.8 3.9 3.10
-          maturin-version: 0.12.10
+          maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
