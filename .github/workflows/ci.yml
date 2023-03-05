@@ -225,9 +225,6 @@ jobs:
         run: |
           brew install gnu-sed
 
-      - name: rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
         if: github.event_name == 'release'
         run: |
@@ -249,6 +246,7 @@ jobs:
         uses: messense/maturin-action@59e476bfb6fd6e071aaa1cf62bc573e10cdac221
         with:
           target: x86_64-apple-darwin
+          command: build
           args: --release -i python
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
@@ -264,6 +262,7 @@ jobs:
       - name: Build wheels - universal2
         uses: messense/maturin-action@59e476bfb6fd6e071aaa1cf62bc573e10cdac221
         with:
+          command: build
           args: --release --universal2 -i python
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
@@ -320,8 +319,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.target }}
-
-      - uses: dtolnay/rust-toolchain@stable
 
       - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
         if: github.event_name == 'release'
@@ -440,7 +437,6 @@ jobs:
         with:
           name: python-wheel
           path: bindings/python/target/wheels/*
-
 
   python-release:
     runs-on: ubuntu-latest
