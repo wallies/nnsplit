@@ -256,6 +256,7 @@ jobs:
           mv Cargo.temp Cargo.toml
           version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
           python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
+          make test
         working-directory: ${{env.working-directory}}
 
       - name: Move cargo build to cargo toml
@@ -277,6 +278,7 @@ jobs:
           mv Cargo.temp Cargo.toml
           version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
           python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
+          make test
         working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
@@ -355,6 +357,7 @@ jobs:
           rm Cargo.toml
           mv Cargo.temp Cargo.toml
           python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
+          make test
         working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
@@ -429,7 +432,7 @@ jobs:
           manylinux: ${{ matrix.platform.manylinux }}
           command: build
           target: ${{ matrix.platform.target }}
-          args: --release -i python${{ matrix.python-version }}
+          args: --release --find-interpreter
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
