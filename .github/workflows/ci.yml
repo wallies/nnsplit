@@ -432,7 +432,7 @@ jobs:
           manylinux: ${{ matrix.platform.manylinux }}
           target: ${{ matrix.platform.target }}
           args: --release -i 3.8 3.9 3.10
-          maturin-version: 0.13.10
+          maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
