@@ -263,7 +263,7 @@ jobs:
         with:
           command: build
           args: --release --universal2 -i python
-          maturin-version: 0.12.10
+          maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
 
       - name: Install built wheel - universal2
