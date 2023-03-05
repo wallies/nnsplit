@@ -249,14 +249,14 @@ jobs:
         uses: messense/maturin-action@59e476bfb6fd6e071aaa1cf62bc573e10cdac221
         with:
           target: x86_64-apple-darwin
-          args: --release --out dist -i python
+          args: --release -i python
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
       - name: Install built wheel - x86_64
         run: |
           mv Cargo.temp Cargo.toml
-          pip install auditwheel-symbols --no-index --find-links dist --force-reinstall
+          pip install auditwheel-symbols --no-index --find-links target/wheels --force-reinstall
           auditwheel-symbols --help
           make test
         working-directory: ${{env.working-directory}}
@@ -264,14 +264,14 @@ jobs:
       - name: Build wheels - universal2
         uses: messense/maturin-action@59e476bfb6fd6e071aaa1cf62bc573e10cdac221
         with:
-          args: --release --universal2 -out dist -i python
+          args: --release --universal2 -i python
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
       - name: Install built wheel - universal2
         run: |
           mv Cargo.temp Cargo.toml
-          pip install auditwheel-symbols --no-index --find-links dist --force-reinstall
+          pip install auditwheel-symbols --no-index --find-links target/wheels --force-reinstall
           auditwheel-symbols --help
           make test
         working-directory: ${{env.working-directory}}
@@ -281,7 +281,7 @@ jobs:
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: python-wheel
-          path: bindings/python/dist/*
+          path: bindings/python/target/wheels/*
 
   python-windows:
     needs: security-audit
@@ -345,7 +345,7 @@ jobs:
         with:
           command: build
           target: ${{ matrix.platform.target }}
-          args: --release --out dist -i python
+          args: --release -i python
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
@@ -353,7 +353,7 @@ jobs:
         run: |
           rm Cargo.toml
           mv Cargo.temp Cargo.toml
-          pip install auditwheel-symbols --no-index --find-links dist --force-reinstall
+          pip install auditwheel-symbols --no-index --find-links target/wheels --force-reinstall
           auditwheel-symbols --help
           make test
         working-directory: ${{env.working-directory}}
@@ -363,7 +363,7 @@ jobs:
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: python-wheel
-          path: bindings/python/dist/*
+          path: bindings/python/target/wheels/*
 
   python-linux:
     needs: security-audit
@@ -376,6 +376,7 @@ jobs:
           { target: "x86_64-unknown-linux-musl",  python-architecture: "x64", manylinux: "auto" },
           { target: "aarch64-unknown-linux-musl", python-architecture: "aarch64", manylinux: "musllinux_1_1" },
         ]
+        python-version: ["3.8", "3.9", "3.10"]
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
@@ -403,7 +404,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
-          python-version: 3.9
+          python-version: ${{ matrix.python-version }}
           architecture: x64
 
       - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
@@ -429,7 +430,7 @@ jobs:
           manylinux: ${{ matrix.platform.manylinux }}
           command: build
           target: ${{ matrix.platform.target }}
-          args: --release -o dist -i 3.8 3.9 3.10
+          args: --release -i python${{ matrix.python-version }}
           maturin-version: 0.12.10
           working-directory: ${{env.working-directory}}
 
@@ -438,7 +439,7 @@ jobs:
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: python-wheel
-          path: bindings/python/dist/*
+          path: bindings/python/target/wheels/*
 
 
   python-release:
