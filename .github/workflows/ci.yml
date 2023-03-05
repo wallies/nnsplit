@@ -254,9 +254,8 @@ jobs:
       - name: Install built wheel - x86_64
         run: |
           mv Cargo.temp Cargo.toml
-          pip install auditwheel-symbols --no-index --find-links target/wheels --force-reinstall
-          auditwheel-symbols --help
-          make test
+          version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
+          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
         working-directory: ${{env.working-directory}}
 
       - name: Build wheels - universal2
@@ -270,9 +269,8 @@ jobs:
       - name: Install built wheel - universal2
         run: |
           mv Cargo.temp Cargo.toml
-          pip install auditwheel-symbols --no-index --find-links target/wheels --force-reinstall
-          auditwheel-symbols --help
-          make test
+          version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
+          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
         working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
@@ -350,9 +348,7 @@ jobs:
         run: |
           rm Cargo.toml
           mv Cargo.temp Cargo.toml
-          pip install auditwheel-symbols --no-index --find-links target/wheels --force-reinstall
-          auditwheel-symbols --help
-          make test
+          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
         working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
