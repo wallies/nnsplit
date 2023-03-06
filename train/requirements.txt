@@ -102,7 +102,7 @@ thinc==8.0.1
 threadpoolctl==2.1.0
 torch==1.7.1
 tornado==6.1
-tqdm==4.56.0
+tqdm==4.65.0
 traitlets==5.9.0
 typer==0.3.2
 typing-extensions==3.7.4.3
