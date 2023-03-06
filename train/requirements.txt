@@ -57,7 +57,7 @@ onnxruntime==1.12.0
 onnxruntime-gpu==1.12.0
 packaging==20.9
 pandas==1.2.1
-pandocfilters==1.4.3
+pandocfilters==1.5.0
 parso==0.8.1
 pathy==0.3.5
 pexpect==4.8.0
