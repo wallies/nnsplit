@@ -123,7 +123,7 @@ jobs:
         working-directory: ${{env.working-directory}}
 
       - name: Run Cypress tests
-        uses: cypress-io/github-action@ca3f666049f4ac2267a75de769535a7cbdc7bfd7 # v5.0.8
+        uses: cypress-io/github-action@4d475873e011991664253f34700acfc3acdc46a3 # v5.3.0
         with:
           working-directory: ${{env.working-directory}}
           start: npm run start_test_server
