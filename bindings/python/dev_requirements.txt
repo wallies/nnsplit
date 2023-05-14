@@ -1,3 +1,4 @@
+--extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ORT-Nightly/pypi/simple/
 maturin==0.12.10
 pytest
 onnxruntime==1.12.0
