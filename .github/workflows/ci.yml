@@ -191,7 +191,7 @@ jobs:
       working-directory: bindings/python
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
@@ -294,7 +294,7 @@ jobs:
     strategy:
       matrix:
         target: [x64]
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
     env:
       working-directory: bindings/python
     steps:
@@ -431,7 +431,7 @@ jobs:
           rust-toolchain: stable
           manylinux: auto
           target: ${{ matrix.platform.target }}
-          args: --release -i 3.8 3.9 3.10
+          args: --release -i 3.8 3.9 3.10 3.11
           maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
 
