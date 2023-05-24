@@ -39,7 +39,7 @@
     "tractjs": "^0.4.0"
   },
   "devDependencies": {
-    "cypress": "^4.9.0",
+    "cypress": "^12.13.0",
     "mocha": "^10.2.0"
   }
 }
