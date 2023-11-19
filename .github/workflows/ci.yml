@@ -122,7 +122,7 @@ jobs:
       working-directory: bindings/python
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.9', '3.10', '3.11']
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
@@ -219,85 +219,6 @@ jobs:
           name: python-wheel
           path: bindings/python/target/wheels/*
 
-  python-windows:
-    needs: security-audit
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        target: [x64]
-        python-version: ['3.8', '3.9', '3.10']
-    env:
-      working-directory: bindings/python
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            crates.io:443
-            github.com:443
-            static.crates.io:443
-            pypi.org:443
-            files.pythonhosted.org:443
-            quay.io:443
-            cdn03.quay.io:443
-            sh.rustup.rs:443
-            static.rust-lang.org:443
-            objects.githubusercontent.com:443
-
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
-        with:
-          fetch-depth: 0
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.target }}
-
-      - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
-        if: github.event_name == 'release'
-        run: |
-          bash update_version.sh ${{ github.event.release.tag_name }}
-
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          make install
-        working-directory: ${{env.working-directory}}
-
-      - name: Move cargo build to cargo toml
-        run: |
-          mv Cargo.toml Cargo.temp
-          cp Cargo.build.toml Cargo.toml
-        working-directory: ${{env.working-directory}}
-
-      - name: Build wheels
-        uses: messense/maturin-action@49e11751aa9751fc4db9c247b8910702ee225df9
-        with:
-          command: build
-          target: ${{ matrix.platform.target }}
-          args: --release -i python
-          maturin-version: 0.12.10
-          working-directory: ${{env.working-directory}}
-
-      - name: Install built wheel
-        run: |
-          rm Cargo.toml
-          mv Cargo.temp Cargo.toml
-          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
-          make test
-        working-directory: ${{env.working-directory}}
-
-      - name: Upload wheels
-        if: github.event_name == 'release'
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
-        with:
-          name: python-wheel
-          path: bindings/python/target/wheels/*
-
   python-linux:
     needs: security-audit
     runs-on: ubuntu-latest
@@ -306,10 +227,6 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.10', '3.11']
-        platform: [
-          { target: "x86_64-unknown-linux-gnu" },
-          { target: "aarch64-unknown-linux-gnu" },
-        ]
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
@@ -362,8 +279,8 @@ jobs:
         with:
           rust-toolchain: stable
           manylinux: auto
-          target: ${{ matrix.platform.target }}
-          args: --release -i 3.8 3.9 3.10
+          target: x86_64
+          args: --release -i 3.9 3.10, 3.11
           maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
 
