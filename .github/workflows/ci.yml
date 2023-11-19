@@ -376,7 +376,7 @@ jobs:
   python-release:
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
-    needs: [build-javascript, build-rust, python-macos, python-windows, python-linux ]
+    needs: [build-rust, python-macos, python-windows, python-linux ]
     permissions:
       contents: write # To add assets to a release.
     steps:
