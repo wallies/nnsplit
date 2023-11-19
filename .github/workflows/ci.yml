@@ -224,9 +224,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: bindings/python
-    strategy:
-      matrix:
-        python-version: ['3.10', '3.11']
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
@@ -254,7 +251,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.9
           architecture: x64
 
       - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
@@ -280,7 +277,8 @@ jobs:
           rust-toolchain: stable
           manylinux: auto
           target: x86_64
-          args: --release -i 3.10, 3.11
+          args: --release -i 3.9 3.10, 3.11
+          # args: --release --sdist -o dist -i 3.8 3.9 3.10 3.11
           maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
 
