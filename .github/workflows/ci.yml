@@ -374,7 +374,7 @@ jobs:
       working-directory: bindings/python
     strategy:
       matrix:
-        python-version: ['3.10., '3.11]
+        python-version: ['3.10', '3.11']
         platform: [
           { target: "x86_64-unknown-linux-gnu" },
           { target: "aarch64-unknown-linux-gnu" },
