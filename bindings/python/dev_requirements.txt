@@ -1,4 +1,4 @@
 maturin==0.12.10
 pytest
 onnxruntime==1.15.0
-numpy==1.23.3
+numpy==1.24.2
