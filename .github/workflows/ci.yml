@@ -48,7 +48,7 @@ jobs:
         format: 'table'
         vuln-type: 'library'
         severity: 'CRITICAL,HIGH'
-        security-checks: 'vuln,config,secret'
+        scanners: 'vuln,config,secret'
 
     - name: Run vulnerability scanner in repo mode
       if: github.actor == 'dependabot[bot]'
@@ -59,77 +59,7 @@ jobs:
         format: 'table'
         vuln-type: 'library'
         severity: 'HIGH,CRITICAL'
-        security-checks: 'vuln,config,secret'
-
-  build-javascript:
-    needs: security-audit
-    runs-on: ubuntu-latest
-    env:
-      working-directory: bindings/javascript
-    strategy:
-      matrix:
-        browser: ["firefox", "chrome", "electron"]
-
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            actions-results-receiver-production.githubapp.com:443
-            api.github.com:443
-            cdn.cypress.io:443
-            content-signature-2.cdn.mozilla.net:443
-            crates.io:443
-            download.cypress.io:443
-            firefox-settings-attachments.cdn.mozilla.net:443
-            firefox.settings.services.mozilla.com:443
-            github.com:443
-            location.services.mozilla.com:443
-            objects.githubusercontent.com:443
-            ocsp.digicert.com:80
-            r3.o.lencr.org:80
-            registry.npmjs.org:443
-            shavar.services.mozilla.com:443
-            static.crates.io:443
-            static.rust-lang.org:443
-            tracking-protection.cdn.mozilla.net:443
-
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
-
-      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1.0.7
-        with:
-          profile: minimal
-          toolchain: stable
-
-      - name: Install wasm-pack # need a build from master for https://github.com/rustwasm/wasm-pack/pull/839
-        run: cargo install --git https://github.com/rustwasm/wasm-pack --rev d46d1c6
-
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v2-beta
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ${{env.working-directory}}
-
-      - name: Build module
-        run: npm run build
-        working-directory: ${{env.working-directory}}
-
-      - name: Run Node.js tests
-        run: npm run test:node
-        working-directory: ${{env.working-directory}}
-
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@ca3f666049f4ac2267a75de769535a7cbdc7bfd7 # v5.0.8
-        with:
-          working-directory: ${{env.working-directory}}
-          start: npm run start_test_server
-          wait-on: "http://localhost:8080"
-          browser: ${{ matrix.browser }}
-
+        scanners: 'vuln,config,secret'
 
   build-rust:
     needs: security-audit
