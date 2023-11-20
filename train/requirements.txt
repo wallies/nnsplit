@@ -22,7 +22,7 @@ fsspec==0.8.5
 future==0.18.3
 google-auth==2.16.0
 google-auth-oauthlib==0.4.2
-grpcio==1.35.0
+grpcio==1.59.3
 idna==2.10
 ipykernel==5.4.3
 ipython==7.20.0
