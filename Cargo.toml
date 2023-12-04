@@ -2,6 +2,5 @@
 
 members = [
     "nnsplit",
-    "bindings/javascript",
     "bindings/python"
 ]

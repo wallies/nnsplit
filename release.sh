@@ -11,12 +11,12 @@ cd ..
 cp -a README.md bindings/python/README.md
 twine upload $WHEEL_DIR/*
 
-cd bindings/javascript
-npm run build
-cp -a ../../README.md pkg/README.md
-npm publish pkg
-cd ../../
+# cd bindings/javascript
+# npm run build
+# cp -a ../../README.md pkg/README.md
+# npm publish pkg
+# cd ../../
 
 rm nnsplit/README.md
-rm bindings/javascript/pkg/README.md
+# rm bindings/javascript/pkg/README.md
 rm bindings/python/README.md

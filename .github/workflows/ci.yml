@@ -41,95 +41,25 @@ jobs:
 
     - name: Run vulnerability scanner in repo mode
       if: github.actor != 'dependabot[bot]'
-      uses: aquasecurity/trivy-action@e5f43133f6e8736992c9f3c1b3296e24b37e17f2 # 0.2.2
+      uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0
       with:
         scan-type: 'fs'
         ignore-unfixed: true
         format: 'table'
         vuln-type: 'library'
         severity: 'CRITICAL,HIGH'
-        security-checks: 'vuln,config,secret'
+        scanners: 'vuln,config,secret'
 
     - name: Run vulnerability scanner in repo mode
       if: github.actor == 'dependabot[bot]'
-      uses: aquasecurity/trivy-action@e5f43133f6e8736992c9f3c1b3296e24b37e17f2 # 0.2.2
+      uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0
       with:
         scan-type: 'fs'
         ignore-unfixed: false
         format: 'table'
         vuln-type: 'library'
         severity: 'HIGH,CRITICAL'
-        security-checks: 'vuln,config,secret'
-
-  build-javascript:
-    needs: security-audit
-    runs-on: ubuntu-latest
-    env:
-      working-directory: bindings/javascript
-    strategy:
-      matrix:
-        browser: ["firefox", "chrome", "electron"]
-
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            actions-results-receiver-production.githubapp.com:443
-            api.github.com:443
-            cdn.cypress.io:443
-            content-signature-2.cdn.mozilla.net:443
-            crates.io:443
-            download.cypress.io:443
-            firefox-settings-attachments.cdn.mozilla.net:443
-            firefox.settings.services.mozilla.com:443
-            github.com:443
-            location.services.mozilla.com:443
-            objects.githubusercontent.com:443
-            ocsp.digicert.com:80
-            r3.o.lencr.org:80
-            registry.npmjs.org:443
-            shavar.services.mozilla.com:443
-            static.crates.io:443
-            static.rust-lang.org:443
-            tracking-protection.cdn.mozilla.net:443
-
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
-
-      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1.0.7
-        with:
-          profile: minimal
-          toolchain: stable
-
-      - name: Install wasm-pack # need a build from master for https://github.com/rustwasm/wasm-pack/pull/839
-        run: cargo install --git https://github.com/rustwasm/wasm-pack --rev d46d1c6
-
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v2-beta
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ${{env.working-directory}}
-
-      - name: Build module
-        run: npm run build
-        working-directory: ${{env.working-directory}}
-
-      - name: Run Node.js tests
-        run: npm run test:node
-        working-directory: ${{env.working-directory}}
-
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@ca3f666049f4ac2267a75de769535a7cbdc7bfd7 # v5.0.8
-        with:
-          working-directory: ${{env.working-directory}}
-          start: npm run start_test_server
-          wait-on: "http://localhost:8080"
-          browser: ${{ matrix.browser }}
-
+        scanners: 'vuln,config,secret'
 
   build-rust:
     needs: security-audit
@@ -148,6 +78,10 @@ jobs:
             github.com:443
             pypi.org:443
             static.crates.io:443
+            index.crates.io:443
+            pipelinesghubeus12.actions.githubusercontent.com:443
+            acghubeus2.actions.githubusercontent.com:443
+            productionresultssa0.blob.core.windows.net:443
 
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
         with:
@@ -164,6 +98,7 @@ jobs:
         with:
           path: ~/.cargo/git
           key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Cache cargo build
         uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
         with:
@@ -184,205 +119,15 @@ jobs:
           command: test
           args: --verbose --all-features
 
-  python-macos:
-    needs: security-audit
-    runs-on: macos-latest
-    env:
-      working-directory: bindings/python
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10']
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            crates.io:443
-            github.com:443
-            static.crates.io:443
-            pypi.org:443
-            files.pythonhosted.org:443
-            quay.io:443
-            cdn03.quay.io:443
-            sh.rustup.rs:443
-            static.rust-lang.org:443
-            objects.githubusercontent.com:443
-
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
-        with:
-          fetch-depth: 0
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install GSED (if needed) # needed by update_version.sh
-        if: github.event_name == 'release'
-        run: |
-          brew install gnu-sed
-
-      - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
-        if: github.event_name == 'release'
-        run: |
-          bash update_version.sh ${{ github.event.release.tag_name }}
-
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          make install
-        working-directory: ${{env.working-directory}}
-
-      - name: Move cargo build to cargo toml
-        run: |
-          mv Cargo.toml Cargo.temp
-          cp Cargo.build.toml Cargo.toml
-        working-directory: ${{env.working-directory}}
-
-      - name: Build wheels - x86_64
-        uses: messense/maturin-action@49e11751aa9751fc4db9c247b8910702ee225df9
-        with:
-          target: x86_64-apple-darwin
-          command: build
-          args: --release -i python
-          maturin-version: 0.12.10
-          working-directory: ${{env.working-directory}}
-
-      - name: Install built wheel - x86_64
-        run: |
-          mv Cargo.temp Cargo.toml
-          version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
-          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
-          make test
-        working-directory: ${{env.working-directory}}
-
-      - name: Move cargo build to cargo toml
-        run: |
-          mv Cargo.toml Cargo.temp
-          cp Cargo.build.toml Cargo.toml
-        working-directory: ${{env.working-directory}}
-
-      - name: Build wheels - universal2
-        uses: messense/maturin-action@49e11751aa9751fc4db9c247b8910702ee225df9
-        with:
-          command: build
-          args: --release --universal2 -i python
-          maturin-version: 0.13.5
-          working-directory: ${{env.working-directory}}
-
-      - name: Install built wheel - universal2
-        run: |
-          mv Cargo.temp Cargo.toml
-          version=`python -c "import sys; print(str(sys.version_info.major) + str(sys.version_info.minor))"` && \
-          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
-          make test
-        working-directory: ${{env.working-directory}}
-
-      - name: Upload wheels
-        if: github.event_name == 'release'
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
-        with:
-          name: python-wheel
-          path: bindings/python/target/wheels/*
-
-  python-windows:
-    needs: security-audit
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        target: [x64]
-        python-version: ['3.8', '3.9', '3.10']
-    env:
-      working-directory: bindings/python
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            crates.io:443
-            github.com:443
-            static.crates.io:443
-            pypi.org:443
-            files.pythonhosted.org:443
-            quay.io:443
-            cdn03.quay.io:443
-            sh.rustup.rs:443
-            static.rust-lang.org:443
-            objects.githubusercontent.com:443
-
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
-        with:
-          fetch-depth: 0
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.target }}
-
-      - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
-        if: github.event_name == 'release'
-        run: |
-          bash update_version.sh ${{ github.event.release.tag_name }}
-
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          make install
-        working-directory: ${{env.working-directory}}
-
-      - name: Move cargo build to cargo toml
-        run: |
-          mv Cargo.toml Cargo.temp
-          cp Cargo.build.toml Cargo.toml
-        working-directory: ${{env.working-directory}}
-
-      - name: Build wheels
-        uses: messense/maturin-action@49e11751aa9751fc4db9c247b8910702ee225df9
-        with:
-          command: build
-          target: ${{ matrix.platform.target }}
-          args: --release -i python
-          maturin-version: 0.12.10
-          working-directory: ${{env.working-directory}}
-
-      - name: Install built wheel
-        run: |
-          rm Cargo.toml
-          mv Cargo.temp Cargo.toml
-          python -m pip install --ignore-installed --upgrade --find-links=target/wheels nnsplit
-          make test
-        working-directory: ${{env.working-directory}}
-
-      - name: Upload wheels
-        if: github.event_name == 'release'
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
-        with:
-          name: python-wheel
-          path: bindings/python/target/wheels/*
-
   python-linux:
     needs: security-audit
     runs-on: ubuntu-latest
     env:
       working-directory: bindings/python
-    strategy:
-      matrix:
-        platform: [
-          { target: "x86_64-unknown-linux-gnu" },
-          { target: "aarch64-unknown-linux-gnu" },
-        ]
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
         with:
-          disable-sudo: true
           egress-policy: audit
           allowed-endpoints: >
             api.github.com:443
@@ -392,6 +137,9 @@ jobs:
             pypi.org:443
             files.pythonhosted.org:443
             quay.io:443
+            cdn.quay.io:443
+            cdn01.quay.io:443
+            cdn02.quay.io:443
             cdn03.quay.io:443
             sh.rustup.rs:443
             static.rust-lang.org:443
@@ -424,14 +172,15 @@ jobs:
           mv Cargo.toml Cargo.temp
           cp Cargo.build.toml Cargo.toml
         working-directory: ${{env.working-directory}}
-
+          
       - name: Build Wheels - manylinux
-        uses: messense/maturin-action@49e11751aa9751fc4db9c247b8910702ee225df9
+        uses: messense/maturin-action@683eb33e2cda131da55757dbac7628b2ef22df2f
         with:
           rust-toolchain: stable
           manylinux: auto
-          target: ${{ matrix.platform.target }}
-          args: --release -i 3.8 3.9 3.10
+          target: x86_64
+          args: --release -i 3.10 3.11
+          # args: --release --sdist -o dist -i 3.10 3.11
           maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
 
@@ -445,7 +194,7 @@ jobs:
   python-release:
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
-    needs: [build-javascript, build-rust, python-macos, python-windows, python-linux ]
+    needs: [build-rust, python-linux ]
     permissions:
       contents: write # To add assets to a release.
     steps:
@@ -463,10 +212,10 @@ jobs:
           profile: minimal
           toolchain: stable
 
-      - name: Set up Python 3.8
+      - name: 'Set up Python 3.10'
         uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
-          python-version: 3.8
+          python-version: '3.10'
 
       - uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
         with:
