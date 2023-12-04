@@ -167,13 +167,19 @@ jobs:
           make install
         working-directory: ${{env.working-directory}}
 
+      - name: Move cargo build to cargo toml
+        run: |
+          mv Cargo.toml Cargo.temp
+          cp Cargo.build.toml Cargo.toml
+        working-directory: ${{env.working-directory}}
+          
       - name: Build Wheels - manylinux
         uses: messense/maturin-action@683eb33e2cda131da55757dbac7628b2ef22df2f
         with:
           rust-toolchain: stable
           manylinux: auto
           target: x86_64
-          args: --release -i 3.10, 3.11 -m Cargo.build.toml
+          args: --release -i 3.10 3.11
           # args: --release --sdist -o dist -i 3.10 3.11
           maturin-version: 0.13.5
           working-directory: ${{env.working-directory}}
