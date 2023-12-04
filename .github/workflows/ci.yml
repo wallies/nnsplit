@@ -35,7 +35,7 @@ jobs:
           pkg-containers.githubusercontent.com:443
 
     - name: Checkout the code
-      uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v2
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v2
       with:
         fetch-depth: 0
 
@@ -83,7 +83,7 @@ jobs:
             acghubeus2.actions.githubusercontent.com:443
             productionresultssa0.blob.core.windows.net:443
 
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.3.0
         with:
           fetch-depth: 0
 
@@ -146,7 +146,7 @@ jobs:
             objects.githubusercontent.com:443
             ghcr.io:443
 
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.3.0
         with:
           fetch-depth: 0
 
@@ -203,7 +203,7 @@ jobs:
         with:
           egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
 
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.3.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.3.0
         with:
           ref: ${{ github.head_ref }}
 
