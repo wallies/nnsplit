@@ -151,7 +151,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
-          python-version: 3.9
+          python-version: '3.10'
           architecture: x64
 
       - name: Update version (if release) # only needed for python since we store artifacts, others are rebuilt
@@ -210,10 +210,10 @@ jobs:
           profile: minimal
           toolchain: stable
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.10
         uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
-          python-version: 3.8
+          python-version: '3.10'
 
       - uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
         with:
