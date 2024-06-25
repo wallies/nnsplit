@@ -6,9 +6,6 @@ version = "0.6.0-post0"
 authors = ["Benjamin Minixhofer <bminixhofer@gmail.com>"]
 edition = "2018"
 
-[package.metadata.maturin]
-requires-dist = ["onnxruntime==1.15.0", "tqdm>=4"]
-
 [lib]
 name = "nnsplit"
 crate-type = ["cdylib"]
@@ -27,5 +24,3 @@ features = ["model-loader"]
 [dependencies.pyo3]
 version = "0.14"
 features = ["extension-module"]
-
-[workspace]
