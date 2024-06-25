@@ -101,7 +101,7 @@ testpath==0.4.4
 thinc==8.0.1
 threadpoolctl==2.1.0
 torch==1.7.1
-tornado==6.4
+tornado==6.4.1
 tqdm==4.56.0
 traitlets==5.9.0
 typer==0.3.2
