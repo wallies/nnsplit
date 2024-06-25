@@ -172,16 +172,14 @@ jobs:
           mv Cargo.toml Cargo.temp
           cp Cargo.build.toml Cargo.toml
         working-directory: ${{env.working-directory}}
-          
+
       - name: Build Wheels - manylinux
-        uses: messense/maturin-action@a3013db91b2ef2e51420cfe99ee619c8e72a17e6
+        uses: PyO3/maturin-action@bf468cfccfe9a3fec2554b0eebf2e9276cf066aa
         with:
-          rust-toolchain: stable
           manylinux: auto
           target: x86_64
-          args: --release -i 3.10 3.11 3.12
-          # args: --release --sdist -o dist -i 3.10 3.11
-          maturin-version: 0.14.0
+          command: build
+          args: --release --sdist -o dist -i 3.10 3.11 3.12
           working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
