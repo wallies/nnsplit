@@ -110,6 +110,6 @@ urllib3==1.26.5
 wasabi==0.8.2
 wcwidth==0.2.5
 webencodings==0.5.1
-Werkzeug==1.0.1
+Werkzeug==3.0.3
 widgetsnbextension==4.0.10
 yarl==1.6.3
