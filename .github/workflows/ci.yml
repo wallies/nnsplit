@@ -172,8 +172,7 @@ jobs:
         with:
           manylinux: auto
           target: x86_64
-          command: build
-          args: --release --sdist -o dist -i 3.10 3.11 3.12
+          args: --release -i 3.10 3.11 3.12
           working-directory: ${{env.working-directory}}
 
       - name: Upload wheels
