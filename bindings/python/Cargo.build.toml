@@ -15,8 +15,6 @@ ndarray = "0.15.0"
 numpy = "0.14.1"
 lazy_static = "1.4"
 serde_json = "1.0"
-onnxruntime = "1.15.0"
-tqdm >= "4"
 
 [dependencies.nnsplit]
 path = "../../nnsplit"
