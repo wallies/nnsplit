@@ -170,7 +170,7 @@ jobs:
       - name: Build Wheels - manylinux
         uses: PyO3/maturin-action@bf468cfccfe9a3fec2554b0eebf2e9276cf066aa
         with:
-          manylinux: auto
+          manylinux: off
           target: x86_64
           args: --release -i 3.12
           working-directory: ${{env.working-directory}}
