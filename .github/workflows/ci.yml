@@ -174,7 +174,7 @@ jobs:
         working-directory: ${{env.working-directory}}
           
       - name: Build Wheels - manylinux
-        uses: messense/maturin-action@a3013db91b2ef2e51420cfe99ee619c8e72a17e6
+        uses: messense/maturin-action@2c5c1560848aaa364c3545136054932db5fa27b7
         with:
           rust-toolchain: stable
           manylinux: auto
