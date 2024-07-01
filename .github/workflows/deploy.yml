@@ -48,7 +48,7 @@ jobs:
         working-directory: website
 
       - name: Deploy to gh-pages
-        uses: JamesIves/github-pages-deploy-action@65b5dfd4f5bcd3a7403bbc2959c144256167464e # releases/v3
+        uses: JamesIves/github-pages-deploy-action@5c6e9e9f3672ce8fd37b9856193d2a537941e66c # releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
